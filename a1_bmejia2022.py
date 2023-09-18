@@ -52,7 +52,7 @@ def minmax(connect, depth, min_or_max, move, alpha, beta):
         if move_outcome:
             # Recursively call minmax for the next state after playing a move
             best = minmax(neighbor, depth - 1, min_or_max * -1, str(position), alpha, beta)
-            
+
             # Update the best score and best move, ignore irrelevant scores using alpha beta pruning
             if (min_or_max == MAX and best.value > best_score) or (min_or_max == MIN and best.value < best_score):
                 best_score = best.value
@@ -69,6 +69,8 @@ def minmax(connect, depth, min_or_max, move, alpha, beta):
 PLAYERS = {PLAYER_HUMAN: -1,
            PLAYER_AI: 1}
 
+# List that represents the values initially on the board
+# It will help with determining if the position is available
 values = ['0','1','2','3','4','5','6','7','8']
 # Class that will represent a game of Tic Tac Toe
 class TicTacToe:
@@ -170,6 +172,7 @@ class TicTacToe:
                 return False
         return True
 
+    # Play the move if a valid position was given
     def play_move(self, position):
         if 0 <= int(position) <= 8:
             if not self.position_taken(position):
@@ -189,6 +192,7 @@ class TicTacToe:
             return False
         return False
     
+    # Determine score for AI. Score is dependent on which player has a complete row
     def get_score_for_ai(self):
         if self.has_a_row(PLAYER_HUMAN, 4):
             return -10
@@ -197,18 +201,21 @@ class TicTacToe:
         return 0
                             
                         
-
+# Set initial variables before game play
 SEARCH_DEPTH = 10
 continue_play = 'Y'
+# Message explaining purpose of application
 print("""
         Welcome to Tic Tac Toe with AI. The purpose of this app is to play against AI with
         and implementation of the minmax algorithm, with additional alpha-beta pruning.
         """)
+# Instatiate a game of TicTacToe
 game = TicTacToe()
-
+# Begin game and as long as user wishes to continue playing the game will continue
 while continue_play == 'Y':
     game.print_board(True)
     while game.has_winner() == 0:
+        # Player makes a move
         player_move_result = False
         while player_move_result is False:
             player_move = input("X's turn. Input move (0-8): ")
@@ -226,6 +233,7 @@ while continue_play == 'Y':
         if game.has_winner() != 0:
             print(game.has_winner())
             break
+    # Board to be reset after the end of a complete game play
     game.reset_board()
     continue_play = input("Do you want to play another round?\nEnter 'Y' for yes or 'N' for no ").upper()
     print("\n")
